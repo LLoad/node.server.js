@@ -1,5 +1,7 @@
 var DBManager = require('./DBManager.js');
 var connection = DBManager.getConnection();
+var sha256 = require('sha256');
+require('date-utils');
 
 exports.selectDrugFromName = function (req, res) {
     var query = 'SELECT * FROM drug WHERE drugName = ?';
@@ -49,4 +51,14 @@ exports.selectDrugFromId = function(req, res) {
             });
         }
     });
+}
+
+exports.selectAll = function(req,res) {
+    console.log("ok");
+    var query = 'SELECT * FROM drug';
+    connection.query(query, function(err, rows) {
+        console.log(rows);
+        res.json(rows);
+    });
+    console.log(query);
 }

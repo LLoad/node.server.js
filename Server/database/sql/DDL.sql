@@ -1,6 +1,6 @@
-CREATE SCHEMA test_db;
+CREATE SCHEMA test;
 
-CREATE TABLE test_db.drug (
+CREATE TABLE test.drug (
     drugId INT NOT NULL,
     drugName VARCHAR(45) NOT NULL,
     drugShape VARCHAR(45) NOT NULL,
