@@ -1,11 +1,20 @@
 var DBManager = require('./DBManager.js');
 var connection = DBManager.getConnection();
-var sha256 = require('sha256');
+var fs = require('fs');
+var iconv = require('iconv').iconv;
+var jschardet = require('jschardet');
 require('date-utils');
 
 exports.selectDrugFromName = function (req, res) {
-    var query = 'SELECT * FROM drug WHERE drugName = ?';
-    connection.query(query, [req.body.drugName], function (err, rows) {
+    console.log(req.query.drugName);
+    var content = req.query.drugName;
+    var content2 = jschardet.detect(content);
+    var iconv = new iconv(content2.encoding, "UTF-8");
+    var content3 = iconv.convert(content);
+    var utf8Text = content3.toString('utf-8');
+    console.log(utf8Text);
+    var query = 'SELECT * FROM drug WHERE drugName = "' + utf8Text + '"';
+    connection.query(query, function (err, rows) {
         if(!err) {
             res.json( {
                 result : 1,
@@ -40,11 +49,10 @@ exports.selectDrugFromText = function(req, res) {
 }
 
 exports.selectDrugFromId = function(req, res) {
-    console.log("ok1");
-    var query = 'SELECT FROM drug WHERE drugId = ?';
-    connection.query(query, [req.body.drugId], function(err, rows) {
+    console.log(req.query.drugId);
+    var query = 'SELECT * FROM drug WHERE drugId = "' + req.query.drugId+'"';
+    connection.query(query, function(err, rows) {
         if(!err) {
-            console.log("ok2");
             res.json( {
                 result : 1,
                 rows : rows
