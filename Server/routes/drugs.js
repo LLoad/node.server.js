@@ -17,11 +17,11 @@ router.post('/drug_list_from_image', function(req, res) {
     query.selectDrugFromImage(req, res);
 });
 
-router.get('/drug_list_from_text', function(req,res) {
-    query.selectDrugFromText(req, res);
+router.get('/drug_list_from_shape', function(req,res) {
+    query.selectDrugFromShape(req, res);
 });
-router.post('/drug_list_from_text', function(req,res) {
-    query.selectDrugFromText(req, res);
+router.post('/drug_list_from_shape', function(req,res) {
+    query.selectDrugFromShape(req, res);
 });
 router.get('/drug_detail', function(req, res) {
     query.selectDrugFromId(req, res);
