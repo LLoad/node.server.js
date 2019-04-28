@@ -1,5 +1,5 @@
-INSERT INTO test.drug (drugId, drugName, drugShape, drugColor, drugFrontText) VALUES (1, '서민혁1', '원형1', '흰색1', '타이레놀1');
-INSERT INTO test.drug (drugId, drugName, drugShape, drugColor, drugFrontText) VALUES (2, '서민혁2', '원형2', '흰색2', '타이레놀2');
-INSERT INTO test.drug (drugId, drugName, drugShape, drugColor, drugFrontText) VALUES (3, '서민혁3', '원형3', '흰색3', '타이레놀3');
-INSERT INTO test.drug (drugId, drugName, drugShape, drugColor, drugFrontText) VALUES (4, '서민혁4', '원형4', '흰색4', '');
-INSERT INTO test.drug (drugId, drugName, drugShape, drugColor, drugFrontText) VALUES (5, '서민혁5', '원형5', '흰색5', '');
+INSERT INTO test.drug (drugId, drugName, drugImage, drugShape, drugColor, drugFrontText) VALUES ('196000003', '덱사소론정0.75밀리그람(덱사메타손)', 'https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/150194764897400037', '원형', '노랑', '마크');
+INSERT INTO test.drug (drugId, drugName, drugImage, drugShape, drugColor, drugFrontText) VALUES ('196200046', '트리민정4밀리그람(페르페나진)', 'https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147800402726800143', '원형', '파랑', 'YJP');
+INSERT INTO test.drug (drugId, drugName, drugImage, drugShape, drugColor, drugFrontText) VALUES ('196400005', '씨제이베사코린정(베타네콜염화물)', 'https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427297681200013', '원형', '하양', 'BCO');
+INSERT INTO test.drug (drugId, drugName, drugImage, drugShape, drugColor, drugFrontText) VALUES ('196600007', '씨제이케이완정(피토나디온)', 'https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/147427297681200034', '원형', '노랑', '마크분할선K1');
+INSERT INTO test.drug (drugId, drugName, drugImage, drugShape, drugColor, drugFrontText) VALUES ('196900043', '후라베린큐정', 'https://nedrug.mfds.go.kr/pbp/cmn/itemImageDownload/154661648918900160', '원형', '연두', 'ID·Q');
