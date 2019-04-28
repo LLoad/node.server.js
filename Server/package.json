@@ -11,6 +11,7 @@
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
+    "iconv": "^2.3.4",
     "iconv-lite": "^0.4.24",
     "jade": "~1.11.0",
     "jschardet": "^2.1.0",
