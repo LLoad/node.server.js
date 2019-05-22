@@ -12,6 +12,8 @@
     "date-utils": "^1.2.21",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
     "http-errors": "~1.6.2",
     "iconv": "^2.3.4",
     "iconv-lite": "^0.4.24",
@@ -23,9 +25,11 @@
     "mysql2": "^1.6.5",
     "nan": "^2.13.2",
     "node-gyp": "^4.0.0",
+    "path": "^0.12.7",
     "python": "0.0.4",
     "sequelize": "^5.8.6",
     "sha256": "^0.2.0",
+    "socket.io": "^2.2.0",
     "urlencode": "^1.1.0"
   }
 }

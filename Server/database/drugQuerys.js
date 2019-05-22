@@ -27,7 +27,7 @@ exports.selectDrugFromNamePost = function(req, res) {
     });
 }
 
-exports.selectDrugFromImage = function(req, res, next) {
+exports.selectDrugFromImageGet = function(req, res) {
     var query = 'SELECT * FROM drug WHERE drugShape = ?, drugColor = ?, drugRatio = ?';
     connection.query(query, [req.body.drugShape, req.body.drugColor, req.body.drugRatio], function(err, rows) {
         if(!err) {
@@ -35,6 +35,11 @@ exports.selectDrugFromImage = function(req, res, next) {
             res.json(rows);
         }
     });
+}
+
+exports.selectDrugFromImagePost = function(req, res) {
+
+
 }
 
 exports.selectDrugFromShapeGet = function(req, res) {
