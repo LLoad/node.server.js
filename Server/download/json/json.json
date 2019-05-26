@@ -1,0 +1,18 @@
+{
+    "drugCount" : 2,
+    "image" : "",
+    "drugs" :[ {
+				"ITEMSHAPE": "원형",
+				"FRONTCOLOR": "",
+				"BACKCOLOR": "",
+				"FRONTMARK": "",
+				"RATIO": 1
+		},
+		{
+			"ITEMSHAPE": "원형",
+			"FRONTCOLOR": "노랑",
+			"BACKCOLOR": "",
+			"FRONTMARK": "K1",
+			"RATIO": 1
+		} ]
+}

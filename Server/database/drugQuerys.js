@@ -2,11 +2,14 @@ var DBManager = require('./DBManager.js');
 var connection = DBManager.getConnection();
 require('date-utils');
 var bodyParser = require('body-parser');
+var exec = require('child_process').exec;
+var fs = require('fs');
+var jsonFile = require('jsonfile');
 
 exports.selectDrugFromNameGet = function (req, res) {
     console.log(req.query.drugName);
 
-    var query = 'SELECT * FROM drug WHERE drugName LIKE "%' + req.query.drugName + '%"';
+    var query = 'SELECT * FROM drug WHERE ITEMNAME LIKE "%' + req.query.drugName + '%"';
     connection.query(query, function (err, rows) {
         if(!err) {
             console.log(rows);
@@ -18,7 +21,8 @@ exports.selectDrugFromNameGet = function (req, res) {
 }
 
 exports.selectDrugFromNamePost = function(req, res) {
-    var query = 'SELECT * FROM drug WHERE drugName LIKE "%' + req.body.drugName + '%"';
+    var query = 'SELECT * FROM drug WHERE ITEMNAME LIKE "%' + req.body.drugName + '%"';
+    console.log(req.body.drugName);
     connection.query(query, function(err, rows) {
         if(!err) {
             console.log(rows);
@@ -28,8 +32,73 @@ exports.selectDrugFromNamePost = function(req, res) {
 }
 
 exports.selectDrugFromImageGet = function(req, res) {
-    var query = 'SELECT * FROM drug WHERE drugShape = ?, drugColor = ?, drugRatio = ?';
-    connection.query(query, [req.body.drugShape, req.body.drugColor, req.body.drugRatio], function(err, rows) {
+    console.log('get');
+    var cmd = ".\\database\\jsonTest.exe"
+    var jsonData;
+    exec(cmd, (error, stdout, stderr) => {
+        if(error) console.error('error : ' +error);
+        fs.writeFile('.\\download\\json\\test.json', stdout, (err) => {
+            if(err) console.log(err);
+            else console.log(stdout);
+        });
+
+        fs.readFile('.\\download\\json\\json.json', 'utf8', function(err, data){
+            jsonData = JSON.parse(data);
+            console.log(jsonData.drugCount);
+            console.log(jsonData.image);
+            console.log(jsonData.drugs);
+            
+        });
+        var json = JSON.stringify(jsonData);
+        console.log(json);
+        //console.log(stdout);
+    });
+}
+
+exports.selectDrugFromImagePost = function(req, res) {
+    console.log('post');
+    var cmd = ".\\cpp\\main.exe"        // c.exe 파일 실행
+    var jsonData;
+    exec(cmd, (error, stdout, stderr) => {
+        if(error) console.error('error : ' +error);
+//        fs.writeFile('.\\download\\json\\test.json', stdout, (err) => {
+//            if(err) console.log(err);
+//            else console.log(stdout);
+//        });
+
+        fs.readFile('.\\download\\json\\json.json', 'utf8', function(err, data){
+            jsonData = JSON.parse(data);
+            //var base64str = base64_encode('.\\download\\srcImage\\cameraTemp.jpg');
+            
+            var imageAsBase64 = fs.readFileSync('.\\download\\srcImage\\cameraTemp.jpg', 'base64');
+            jsonData.image = imageAsBase64;
+            var json = JSON.stringify(jsonData);
+            res.json(json);
+        });
+        //console.log(stdout);
+    });
+}
+
+exports.selectDrugFromImageShapePost = function(req, res) {
+    console.log(req.body.drugRatio);
+    var minRatio = req.body.drugRatio - 0.1;
+    console.log(minRatio);
+    var maxRatio = req.body.drugRatio + 0.1;
+    console.log(maxRatio);
+    var query = 'SELECT * FROM drug WHERE ITEMSHAPE LIKE "%' + req.body.drugShape +'%"'
+                + 'AND ((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
+                    + 'OR FRONTCONTENT LIKE "%' + req.body.drugFrontText + '%"'
+                    + 'OR FRONTCODE LIKE "%' + req.body.drugFrontText + '%")'
+                    + 'OR (BACKMARK LIKE "%' + req.body.drugFrontText + '%"'
+                    + 'OR BACKCONTENT LIKE "%' + req.body.drugFrontText + '%"'
+                    + 'OR BACKCODE LIKE "%' + req.body.drugFrontText + '%"))'
+                + 'AND (LSRATIO BETWEEN ' + minRatio + ' AND ' + maxRatio + ')'
+                + 'AND ((FRONTCOLOR LIKE "%' + req.body.drugFrontColor + '%"'
+                    + 'AND BACKCOLOR LIKE "%' + req.body.drugBackColor + '%")'
+                    + 'OR (FRONTCOLOR LIKE "%' + req.body.drugBackColor + '%"'
+                    + 'AND BACKCOLOR LIKE "%' + req.body.drugFrontColor + '%"))';
+
+    connection.query(query, function(err, rows) {
         if(!err) {
             console.log(rows);
             res.json(rows);
@@ -37,15 +106,10 @@ exports.selectDrugFromImageGet = function(req, res) {
     });
 }
 
-exports.selectDrugFromImagePost = function(req, res) {
-
-
-}
-
 exports.selectDrugFromShapeGet = function(req, res) {
     var query = 'SELECT * FROM drug WHERE drugShape LIKE "%' + req.query.drugShape +'%"'
                 + 'AND drugColor LIKE "%' + req.query.drugColor + '%"'
-                + 'AND drugType LIKE "%' + req.query.drugType + '%"'
+                + 'AND REFINING LIKE "%' + req.query.drugType + '%"'
                 + 'AND drugFrontText LIKE "%' + req.query.drugFrontText + '%"'
                 + 'AND drugBackText LIKE "%' + req.query.drugBackText + '%"';
     connection.query(query, function(err, rows) {
@@ -60,11 +124,28 @@ exports.selectDrugFromShapeGet = function(req, res) {
 }
 
 exports.selectDrugFromShapePost = function(req, res) {
-    var query = 'SELECT * FROM drug WHERE drugShape LIKE "%' + req.body.drugShape +'%"'
-                + 'AND drugColor LIKE "%' + req.body.drugColor + '%"'
-                + 'AND drugType LIKE "%' + req.body.drugType + '%"'
-                + 'AND drugFrontText LIKE "%' + req.body.drugFrontText + '%"'
-                + 'AND drugBackText LIKE "%' + req.body.drugBackText + '%"';
+    console.log(req.body.drugShape);
+    console.log(req.body.drugColor);
+    console.log(req.body.drugType);
+    console.log(req.body.drugFrontText);
+    console.log(req.body.drugBackText);
+    var query = 'SELECT * FROM drug WHERE ITEMSHAPE LIKE "%' + req.body.drugShape +'%"'
+                + 'AND (FRONTCOLOR LIKE "%' + req.body.drugColor + '%"'
+                    + 'OR BACKCOLOR LIKE "%' + req.body.drugColor + '%")'
+                + 'AND REFINING LIKE "%' + req.body.drugType + '%"'
+                + 'AND (((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
+                            + 'OR FRONTCONTENT LIKE "%' + req.body.drugFrontText + '%"'
+                            + 'OR FRONTCODE LIKE "%' + req.body.drugFrontText + '%")'
+                        + 'AND(BACKMARK LIKE "%' + req.body.drugBackText + '%"'
+                            + 'OR BACKCONTENT LIKE "%' + req.body.drugBackText + '%"'
+                            + 'OR BACKCODE LIKE "%' + req.body.drugBackText + '%"))'
+                    + 'OR ((FRONTMARK LIKE "%' + req.body.drugBackText + '%"'
+                            + 'OR FRONTCONTENT LIKE "%' + req.body.drugBackText + '%"'
+                            + 'OR FRONTCODE LIKE "%' + req.body.drugBackText + '%")'
+                        + 'AND(BACKMARK LIKE "%' + req.body.drugFrontText + '%"'
+                            + 'OR BACKCONTENT LIKE "%' + req.body.drugFrontText + '%"'
+                            + 'OR BACKCODE LIKE "%' + req.body.drugFrontText + '%")))';
+    console.log(query);
     connection.query(query, function(err, rows) {
         if(!err) {
             console.log(rows);
@@ -92,4 +173,9 @@ exports.selectAll = function(req,res) {
         res.json(rows);
     });
     console.log(query);
+}
+
+function base64_encode(file){
+    var bitmap = fs.readFileSync(file);
+    return new Buffer(bitmap).toString('base64');
 }

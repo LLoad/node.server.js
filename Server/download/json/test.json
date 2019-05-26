@@ -1,0 +1,20 @@
+{
+	"friendList" : 
+	[
+		{
+			"level" : 1
+		},
+		{
+			"level" : 10
+		}
+	],
+	"id" : "qwerty",
+	"isBeta" : false,
+	"item" : 
+	[
+		"stone",
+		"dirt"
+	],
+	"level" : 123,
+	"password" : "qwerty"
+}
