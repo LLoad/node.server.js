@@ -2,7 +2,7 @@ var DBManager = require('./DBManager.js');
 var connection = DBManager.getConnection();
 require('date-utils');
 var bodyParser = require('body-parser');
-var exec = require('child_process').exec;
+var exec = require('child_process').execSync;
 var fs = require('fs');
 var jsonFile = require('jsonfile');
 
@@ -57,26 +57,6 @@ exports.selectDrugFromImageGet = function(req, res) {
 
 exports.selectDrugFromImagePost = function(req, res) {
     console.log('post');
-    var cmd = ".\\cpp\\main.exe"        // c.exe 파일 실행
-    var jsonData;
-    exec(cmd, (error, stdout, stderr) => {
-        if(error) console.error('error : ' +error);
-//        fs.writeFile('.\\download\\json\\test.json', stdout, (err) => {
-//            if(err) console.log(err);
-//            else console.log(stdout);
-//        });
-
-        fs.readFile('.\\download\\json\\json.json', 'utf8', function(err, data){
-            jsonData = JSON.parse(data);
-            //var base64str = base64_encode('.\\download\\srcImage\\cameraTemp.jpg');
-            
-            var imageAsBase64 = fs.readFileSync('.\\download\\srcImage\\cameraTemp.jpg', 'base64');
-            jsonData.image = imageAsBase64;
-            var json = JSON.stringify(jsonData);
-            res.json(json);
-        });
-        //console.log(stdout);
-    });
 }
 
 exports.selectDrugFromImageShapePost = function(req, res) {
@@ -87,11 +67,9 @@ exports.selectDrugFromImageShapePost = function(req, res) {
     console.log(maxRatio);
     var query = 'SELECT * FROM drug WHERE ITEMSHAPE LIKE "%' + req.body.drugShape +'%"'
                 + 'AND ((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
-                    + 'OR FRONTCONTENT LIKE "%' + req.body.drugFrontText + '%"'
-                    + 'OR FRONTCODE LIKE "%' + req.body.drugFrontText + '%")'
-                    + 'OR (BACKMARK LIKE "%' + req.body.drugFrontText + '%"'
-                    + 'OR BACKCONTENT LIKE "%' + req.body.drugFrontText + '%"'
-                    + 'OR BACKCODE LIKE "%' + req.body.drugFrontText + '%"))'
+                        + 'AND BACKMARK LIKE "%' + req.body.drugBackText + '%")'
+                    + 'OR (FRONTMARK LIKE "%' + req.body.drugBackText + '%"'
+                        + 'AND BACKMARK LIKE "%' + req.body.drugFrontText + '%"))'
                 + 'AND (LSRATIO BETWEEN ' + minRatio + ' AND ' + maxRatio + ')'
                 + 'AND ((FRONTCOLOR LIKE "%' + req.body.drugFrontColor + '%"'
                     + 'AND BACKCOLOR LIKE "%' + req.body.drugBackColor + '%")'
@@ -130,21 +108,13 @@ exports.selectDrugFromShapePost = function(req, res) {
     console.log(req.body.drugFrontText);
     console.log(req.body.drugBackText);
     var query = 'SELECT * FROM drug WHERE ITEMSHAPE LIKE "%' + req.body.drugShape +'%"'
-                + 'AND (FRONTCOLOR LIKE "%' + req.body.drugColor + '%"'
-                    + 'OR BACKCOLOR LIKE "%' + req.body.drugColor + '%")'
                 + 'AND REFINING LIKE "%' + req.body.drugType + '%"'
-                + 'AND (((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
-                            + 'OR FRONTCONTENT LIKE "%' + req.body.drugFrontText + '%"'
-                            + 'OR FRONTCODE LIKE "%' + req.body.drugFrontText + '%")'
-                        + 'AND(BACKMARK LIKE "%' + req.body.drugBackText + '%"'
-                            + 'OR BACKCONTENT LIKE "%' + req.body.drugBackText + '%"'
-                            + 'OR BACKCODE LIKE "%' + req.body.drugBackText + '%"))'
-                    + 'OR ((FRONTMARK LIKE "%' + req.body.drugBackText + '%"'
-                            + 'OR FRONTCONTENT LIKE "%' + req.body.drugBackText + '%"'
-                            + 'OR FRONTCODE LIKE "%' + req.body.drugBackText + '%")'
-                        + 'AND(BACKMARK LIKE "%' + req.body.drugFrontText + '%"'
-                            + 'OR BACKCONTENT LIKE "%' + req.body.drugFrontText + '%"'
-                            + 'OR BACKCODE LIKE "%' + req.body.drugFrontText + '%")))';
+                + 'AND ((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
+                        + 'AND BACKMARK LIKE "%' + req.body.drugBackText + '%")'
+                    + 'OR (FRONTMARK LIKE "%' + req.body.drugBackText + '%"'
+                        + 'AND BACKMARK LIKE "%' + req.body.drugFrontText + '%"))'
+                + 'AND (FRONTCOLOR LIKE "%' + req.body.drugColor + '%"'
+                    + 'OR BACKCOLOR LIKE "%' + req.body.drugColor + '%")';
     console.log(query);
     connection.query(query, function(err, rows) {
         if(!err) {
