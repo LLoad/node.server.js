@@ -1,0 +1,25 @@
+{
+   "drugCount" : 3,
+   "drugs" : 
+   [
+      {
+         "BACKCOLOR" : -1,
+         "FRONTCOLOR" : 3,
+         "ITEMSHAPE" : 1,
+         "RATIO" : 1.0
+      },
+      {
+         "BACKCOLOR" : -1,
+         "FRONTCOLOR" : 3,
+         "ITEMSHAPE" : 1,
+         "RATIO" : 1.0064096871881931
+      },
+      {
+         "BACKCOLOR" : -1,
+         "FRONTCOLOR" : 4,
+         "ITEMSHAPE" : 1,
+         "RATIO" : 1.0
+      }
+   ],
+   "image" : ""
+}

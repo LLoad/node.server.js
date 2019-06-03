@@ -21,7 +21,7 @@ exports.selectDrugFromNameGet = function (req, res) {
 }
 
 exports.selectDrugFromNamePost = function(req, res) {
-    var query = 'SELECT * FROM drug WHERE ITEMNAME LIKE "%' + req.body.drugName + '%"';
+    var query = 'SELECT * FROM drug WHERE (ITEMNAME LIKE "%' + req.body.drugName + '%") limit 10';
     console.log(req.body.drugName);
     connection.query(query, function(err, rows) {
         if(!err) {
@@ -61,11 +61,11 @@ exports.selectDrugFromImagePost = function(req, res) {
 
 exports.selectDrugFromImageShapePost = function(req, res) {
     console.log(req.body.drugRatio);
-    var minRatio = req.body.drugRatio - 0.1;
+    var minRatio = req.body.drugRatio - 0.2;
     console.log(minRatio);
-    var maxRatio = req.body.drugRatio + 0.1;
+    var maxRatio = minRatio + 0.4;
     console.log(maxRatio);
-    var query = 'SELECT * FROM drug WHERE ITEMSHAPE LIKE "%' + req.body.drugShape +'%"'
+    var query = 'SELECT * FROM drug WHERE (ITEMSHAPE = "' + req.body.drugShape +'"'
                 + 'AND ((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
                         + 'AND BACKMARK LIKE "%' + req.body.drugBackText + '%")'
                     + 'OR (FRONTMARK LIKE "%' + req.body.drugBackText + '%"'
@@ -74,7 +74,7 @@ exports.selectDrugFromImageShapePost = function(req, res) {
                 + 'AND ((FRONTCOLOR LIKE "%' + req.body.drugFrontColor + '%"'
                     + 'AND BACKCOLOR LIKE "%' + req.body.drugBackColor + '%")'
                     + 'OR (FRONTCOLOR LIKE "%' + req.body.drugBackColor + '%"'
-                    + 'AND BACKCOLOR LIKE "%' + req.body.drugFrontColor + '%"))';
+                    + 'AND BACKCOLOR LIKE "%' + req.body.drugFrontColor + '%"))) limit 10';
 
     connection.query(query, function(err, rows) {
         if(!err) {
@@ -107,14 +107,14 @@ exports.selectDrugFromShapePost = function(req, res) {
     console.log(req.body.drugType);
     console.log(req.body.drugFrontText);
     console.log(req.body.drugBackText);
-    var query = 'SELECT * FROM drug WHERE ITEMSHAPE LIKE "%' + req.body.drugShape +'%"'
-                + 'AND REFINING LIKE "%' + req.body.drugType + '%"'
-                + 'AND ((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
+    var query = 'SELECT * FROM drug WHERE (ITEMSHAPE = "' + req.body.drugShape + '"'
+                + ' AND REFINING LIKE "%' + req.body.drugType + '%"'
+                + ' AND ((FRONTMARK LIKE "%' + req.body.drugFrontText + '%"'
                         + 'AND BACKMARK LIKE "%' + req.body.drugBackText + '%")'
                     + 'OR (FRONTMARK LIKE "%' + req.body.drugBackText + '%"'
                         + 'AND BACKMARK LIKE "%' + req.body.drugFrontText + '%"))'
                 + 'AND (FRONTCOLOR LIKE "%' + req.body.drugColor + '%"'
-                    + 'OR BACKCOLOR LIKE "%' + req.body.drugColor + '%")';
+                    + 'OR BACKCOLOR LIKE "%' + req.body.drugColor + '%")) limit 10';
     console.log(query);
     connection.query(query, function(err, rows) {
         if(!err) {

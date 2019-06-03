@@ -5,7 +5,7 @@ var multer = require('multer');
 var path = require('path');
 var fs = require('fs');
 var util = require('util');
-var exec = require('child_process').execSync;
+var exec = require('child_process').exec;
 var jsonFile = require('jsonfile');
 var formidable = require('formidable');
 var multer = require("multer");
@@ -36,21 +36,22 @@ router.post('/drug_list_from_image', function(req, res) {
     fs.writeFile(dir +'srcImage/srcImage.jpg', buf, (err) => {
         console.log('file write completed');
     });
-        console.log(req.body.uid);
+    
+    console.log(req.body.uid);
         
-        setTimeout(function() {
-            var cmd = ".\\DMI.exe"    // c.exe 파일 실행
-            console.log(cmd);
-            var jsonData;
-            exec(cmd, (error, stdout, stderr) => {
-                if(error) console.error('error : ' +error);
-                else {
-                    jsonData = JSON.parse(stdout);
+    setTimeout(function() {
+        var cmd = ".\\DMI.exe"
+        console.log(cmd);
+        var jsonData;
+        exec(cmd, (error, stdout, stderr) => {
+            var jsonData = JSON.parse(stdout);
 
-                    var Array = jsonData.drugs;
+            var Array = jsonData.drugs;
             var itemShape;
             var frontColor;
             var backColor;
+            
+            console.log(jsonData.drugCount);
             
             for(var i = 0; i < jsonData.drugCount; i++) {
                 itemShape = Array[i]["ITEMSHAPE"].toString();
@@ -65,22 +66,14 @@ router.post('/drug_list_from_image', function(req, res) {
             }
             jsonData.drugs = Array;
     
-            var base64str = base64_encode(req.body.uid + "\\dstImage\\cameraTemp.jpg");
+            var base64str = base64_encode(dir +'dstImage\\cameraTemp.jpg');
             jsonData.image = base64str;
-            
+            console.log(jsonData);
             var json = JSON.stringify(jsonData);
-    
             res.json(json);
-
-
-                }
-            });
-            
-        },1000);
-
-
-
-    //query.selectDrugFromImagePost(req, res);
+         
+        });
+    }, 1000);
 });
 
 router.post('/drug_list_from_image_shape', function(req,res) {
@@ -117,8 +110,8 @@ router.get('/test', function(req, res) {
         }
         jsonData.drugs = Array;
 
-        var base64str = base64_encode('.\\download\\srcImage\\dstImage.jpg');
-        jsonData.image = base64str;
+        //var base64str = base64_encode('.\\download\\srcImage\\dstImage.jpg');
+        //jsonData.image = base64str;
         
         var json = JSON.stringify(jsonData);
 
@@ -179,7 +172,7 @@ function switchShape(shape) {
         case 1: {
             shape = "원형"; break; }
         case 2: {
-            shape = "타원"; break; }
+            shape = "타원형"; break; }
         case 3: {
             shape = "장방형"; break; }
         case 4: {
